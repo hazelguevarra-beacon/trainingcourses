@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OBPH Training Portal – Courses</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: #0D1E3B; /* Navy blue background */
+      color: white;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(90deg, #0D1E3B, #112a52);
+      color: #FDBE34;
+      text-align: center;
+      padding: 25px 15px;
+      font-size: 26px;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    .search-container {
+      text-align: center;
+      margin: 30px 0 20px;
+    }
+
+    input[type="text"] {
+      width: 80%;
+      max-width: 480px;
+      padding: 14px;
+      border: none;
+      border-radius: 30px;
+      font-size: 16px;
+      outline: none;
+      box-shadow: 0 0 10px rgba(253, 190, 52, 0.4);
+      transition: box-shadow 0.3s;
+    }
+
+    input[type="text"]:focus {
+      box-shadow: 0 0 15px rgba(253, 190, 52, 0.7);
+    }
+
+    .course-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      padding: 20px 40px;
+    }
+
+    .course {
+      background: white;
+      color: #0D1E3B;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .course:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 12px rgba(253, 190, 52, 0.5);
+    }
+
+    .course h3 {
+      color: #0D1E3B;
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+
+    .course p {
+      font-size: 15px;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .course a {
+      background: #FDBE34;
+      color: #0D1E3B;
+      text-decoration: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: background 0.2s ease;
+    }
+
+    .course a:hover {
+      background: #fdd45e;
+    }
+
+    footer {
+      text-align: center;
+      color: #FDBE34;
+      font-size: 13px;
+      margin-top: 20px;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+  <header>OBPH Training Portal – Course Directory</header>
+
+  <div class="search-container">
+    <input type="text" id="search" placeholder="🔍 Search for a course..." />
+  </div>
+
+  <div class="course-list" id="courseList">Loading courses...</div>
+
+  <footer>Office Beacon Philippines © 2025</footer>
+
+  <script>
+    const SHEET_ID = "10nYqPzVyezKJg2hcY5eEodnuAt_eS6FfVQifz3-hfww";
+    const SHEET_NAME = "Courses"; // ✅ your actual sheet tab name
+    const API_URL = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_NAME}`;
+
+    const searchInput = document.getElementById("search");
+    const courseList = document.getElementById("courseList");
+
+    async function loadCourses() {
+      try {
+        const res = await fetch(API_URL);
+        const data = await res.json();
+        window.allCourses = data;
+        displayCourses(data);
+      } catch (err) {
+        console.error(err);
+        courseList.innerHTML = "<p>⚠️ Unable to load courses. Please check your sheet link or sharing settings.</p>";
+      }
+    }
+
+    function displayCourses(courses) {
+      if (!courses || courses.length === 0) {
+        courseList.innerHTML = "<p>No courses found.</p>";
+        return;
+      }
+
+      courseList.innerHTML = courses.map(c => `
+        <div class="course">
+          <h3>${c["Name"] || "Untitled Course"}</h3>
+          <p>${c["Description"] || ""}</p>
+          ${c["Course Link"] ? `<a href="${c["Course Link"]}" target="_blank">View Course →</a>` : ""}
+        </div>
+      `).join("");
+    }
+
+    searchInput.addEventListener("input", e => {
+      const term = e.target.value.toLowerCase();
+      const filtered = window.allCourses.filter(c =>
+        (c["Name"] && c["Name"].toLowerCase().includes(term)) ||
+        (c["Description"] && c["Description"].toLowerCase().includes(term))
+      );
+      displayCourses(filtered);
+    });
+
+    loadCourses();
+  </script>
+</body>
+</html>
