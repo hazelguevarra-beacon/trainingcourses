@@ -1,162 +1,180 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OBPH Training Portal – Courses</title>
+  <title>OBPH Training Portal</title>
   <style>
     body {
-      font-family: "Segoe UI", sans-serif;
-      background: #0D1E3B; /* Navy blue background */
-      color: white;
       margin: 0;
-      padding: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #0D1E3B 0%, #4a4a4a 40%, #FDBE34 100%);
+      color: #fff;
       min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     header {
-      background: linear-gradient(90deg, #0D1E3B, #112a52);
-      color: #FDBE34;
-      text-align: center;
-      padding: 25px 15px;
-      font-size: 26px;
-      font-weight: bold;
-      letter-spacing: 1px;
+      width: 100%;
+      background: rgba(13,30,59,0.9);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 15px 25px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
 
-    .search-container {
-      text-align: center;
-      margin: 30px 0 20px;
+    header img {
+      height: 50px;
     }
 
-    input[type="text"] {
+    header h1 {
+      font-size: 1.6rem;
+      color: white;
+      margin: 0;
+      font-weight: 600;
+    }
+
+    .search-box {
+      margin: 25px auto;
+      text-align: center;
+    }
+
+    .search-box input {
       width: 80%;
-      max-width: 480px;
-      padding: 14px;
+      max-width: 600px;
+      padding: 12px 18px;
+      font-size: 1rem;
+      border-radius: 25px;
       border: none;
-      border-radius: 30px;
-      font-size: 16px;
       outline: none;
-      box-shadow: 0 0 10px rgba(253, 190, 52, 0.4);
-      transition: box-shadow 0.3s;
-    }
-
-    input[type="text"]:focus {
-      box-shadow: 0 0 15px rgba(253, 190, 52, 0.7);
-    }
-
-    .course-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-      padding: 20px 40px;
-    }
-
-    .course {
-      background: white;
-      color: #0D1E3B;
-      border-radius: 16px;
-      padding: 20px;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
-    }
-
-    .course:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 5px 12px rgba(253, 190, 52, 0.5);
-    }
-
-    .course h3 {
-      color: #0D1E3B;
-      font-size: 20px;
-      margin-bottom: 8px;
-    }
-
-    .course p {
-      font-size: 15px;
+      background: rgba(255,255,255,0.9);
       color: #333;
-      margin-bottom: 10px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.2);
     }
 
-    .course a {
-      background: #FDBE34;
+    .course-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      padding: 0 40px 50px;
+      width: 100%;
+      max-width: 1200px;
+    }
+
+    .course-card {
+      background: rgba(255,255,255,0.95);
+      color: #0D1E3B;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 5px 12px rgba(0,0,0,0.2);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .course-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    }
+
+    .course-card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+    }
+
+    .course-content {
+      padding: 15px;
+    }
+
+    .course-content h3 {
+      margin: 0 0 8px;
+      font-size: 1.1rem;
+      color: #0D1E3B;
+    }
+
+    .course-content p {
+      font-size: 0.9rem;
+      color: #444;
+      margin-bottom: 15px;
+    }
+
+    .course-content a {
+      display: inline-block;
+      background: #b4a7d6; /* lavender */
       color: #0D1E3B;
       text-decoration: none;
       padding: 8px 14px;
-      border-radius: 8px;
-      font-weight: bold;
+      border-radius: 6px;
+      font-weight: 600;
       transition: background 0.2s ease;
     }
 
-    .course a:hover {
-      background: #fdd45e;
+    .course-content a:hover {
+      background: #9e8cc8;
     }
 
     footer {
-      text-align: center;
-      color: #FDBE34;
-      font-size: 13px;
-      margin-top: 20px;
-      padding: 10px;
+      margin-top: auto;
+      padding: 20px;
+      color: rgba(255,255,255,0.8);
+      font-size: 0.9rem;
     }
   </style>
 </head>
 <body>
-  <header>OBPH Training Portal – Course Directory</header>
+  <header>
+    <img src="https://i.imgur.com/d2BCvGL.png" alt="Office Beacon Logo" />
+    <h1>OBPH Training Portal</h1>
+  </header>
 
-  <div class="search-container">
-    <input type="text" id="search" placeholder="🔍 Search for a course..." />
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="🔍 Search courses by name or keyword..." oninput="filterCourses()" />
   </div>
 
-  <div class="course-list" id="courseList">Loading courses...</div>
+  <div class="course-container" id="courseContainer">
+    <p style="text-align:center;width:100%;color:#fff;">Loading courses...</p>
+  </div>
 
-  <footer>Office Beacon Philippines © 2025</footer>
+  <footer>© 2025 Office Beacon Philippines — Training & Development</footer>
 
   <script>
-    const SHEET_ID = "10nYqPzVyezKJg2hcY5eEodnuAt_eS6FfVQifz3-hfww";
-    const SHEET_NAME = "Courses"; // ✅ your actual sheet tab name
-    const API_URL = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_NAME}`;
+    let allCourses = [];
 
-    const searchInput = document.getElementById("search");
-    const courseList = document.getElementById("courseList");
-
-    async function loadCourses() {
-      try {
-        const res = await fetch(API_URL);
-        const data = await res.json();
-        window.allCourses = data;
-        displayCourses(data);
-      } catch (err) {
-        console.error(err);
-        courseList.innerHTML = "<p>⚠️ Unable to load courses. Please check your sheet link or sharing settings.</p>";
-      }
-    }
+    google.script.run.withSuccessHandler(displayCourses).getCourses();
 
     function displayCourses(courses) {
-      if (!courses || courses.length === 0) {
-        courseList.innerHTML = "<p>No courses found.</p>";
+      allCourses = courses;
+      renderCourses(courses);
+    }
+
+    function renderCourses(courses) {
+      const container = document.getElementById("courseContainer");
+      if (!courses.length) {
+        container.innerHTML = `<p style="color:white;text-align:center;">No courses found.</p>`;
         return;
       }
 
-      courseList.innerHTML = courses.map(c => `
-        <div class="course">
-          <h3>${c["Name"] || "Untitled Course"}</h3>
-          <p>${c["Description"] || ""}</p>
-          ${c["Course Link"] ? `<a href="${c["Course Link"]}" target="_blank">View Course →</a>` : ""}
+      container.innerHTML = courses.map(c => `
+        <div class="course-card">
+          <img src="${c.image || 'https://via.placeholder.com/400x160?text=No+Image'}" alt="${c.name}">
+          <div class="course-content">
+            <h3>${c.name}</h3>
+            <p>${c.description || ''}</p>
+            <a href="${c.link}" target="_blank">View Course</a>
+          </div>
         </div>
-      `).join("");
+      `).join('');
     }
 
-    searchInput.addEventListener("input", e => {
-      const term = e.target.value.toLowerCase();
-      const filtered = window.allCourses.filter(c =>
-        (c["Name"] && c["Name"].toLowerCase().includes(term)) ||
-        (c["Description"] && c["Description"].toLowerCase().includes(term))
+    function filterCourses() {
+      const query = document.getElementById("searchInput").value.toLowerCase();
+      const filtered = allCourses.filter(c =>
+        c.name.toLowerCase().includes(query) ||
+        c.description.toLowerCase().includes(query)
       );
-      displayCourses(filtered);
-    });
-
-    loadCourses();
+      renderCourses(filtered);
+    }
   </script>
 </body>
 </html>
