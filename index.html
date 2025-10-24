@@ -1,206 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OBPH Training Portal</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>OBPH Training Portal - Courses</title>
 <style>
-  :root {
-    --navy: #0D1E3B;
-    --gold: #FDBE34;
-    --lavender: #B6A0D6;
-    --gray: #e0e0e0;
-  }
-
   body {
     font-family: "Segoe UI", sans-serif;
     margin: 0;
-    background: linear-gradient(135deg, var(--navy), var(--gold));
-    color: white;
+    padding: 0;
+    background: linear-gradient(135deg, #0D1E3B, #FDBE34);
+    color: #fff;
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
   }
-
   header {
-    width: 100%;
     display: flex;
     align-items: center;
-    gap: 15px;
-    background: rgba(13, 30, 59, 0.95);
     padding: 15px 30px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    background-color: rgba(13, 30, 59, 0.9);
   }
-
   header img {
     height: 50px;
+    margin-right: 15px;
   }
-
-  header h1 {
-    font-size: 1.6rem;
-    font-weight: 600;
-    color: var(--gold);
+  h1 {
+    font-size: 24px;
+    color: #fff;
   }
-
   .search-container {
-    margin: 40px auto;
     text-align: center;
+    margin: 40px auto;
   }
-
   input[type="text"] {
+    padding: 12px;
     width: 300px;
-    padding: 10px 15px;
     border: none;
     border-radius: 8px;
-    outline: none;
-    font-size: 1rem;
-    color: var(--navy);
+    font-size: 16px;
+    color: #333;
   }
-
   button {
-    padding: 10px 16px;
+    background-color: #B6A0D6;
     border: none;
+    color: #0D1E3B;
+    padding: 12px 20px;
+    font-size: 16px;
     border-radius: 8px;
     margin-left: 8px;
-    font-size: 1rem;
     cursor: pointer;
-    color: white;
-    background: var(--lavender);
-    transition: 0.3s ease;
   }
-
   button:hover {
-    background: var(--gold);
-    color: var(--navy);
+    background-color: #FDBE34;
+    color: #fff;
   }
-
-  .courses {
+  #courses {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 20px;
-    width: 90%;
-    max-width: 1000px;
-    margin-bottom: 50px;
+    padding: 20px;
+    max-width: 1100px;
+    margin: 0 auto;
   }
-
   .course-card {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(6px);
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 20px;
     border-radius: 12px;
-    padding: 15px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     text-align: center;
-    transition: transform 0.3s ease;
+    transition: transform 0.2s;
   }
-
   .course-card:hover {
     transform: translateY(-5px);
+    background-color: rgba(255, 255, 255, 0.15);
   }
-
   .course-card img {
     width: 100%;
-    height: 150px;
+    height: 140px;
     object-fit: cover;
-    border-radius: 10px;
+    border-radius: 8px;
   }
-
   .course-card h3 {
-    margin: 12px 0 5px;
-    color: var(--gold);
+    color: #FDBE34;
   }
-
   .course-card p {
-    font-size: 0.95rem;
-    color: var(--gray);
+    color: #E0E0E0;
   }
-
   .course-card a {
-    display: inline-block;
-    margin-top: 8px;
     text-decoration: none;
-    color: var(--lavender);
-    font-weight: 600;
-  }
-
-  .course-card a:hover {
-    color: var(--gold);
-  }
-
-  .error {
-    text-align: center;
-    color: #fff;
+    color: #B6A0D6;
     font-weight: bold;
   }
 </style>
 </head>
 <body>
+  <header>
+    <img src="https://i.imgur.com/d2BCvGL.png" alt="Office Beacon Logo" />
+    <h1>OBPH Training Portal</h1>
+  </header>
 
-<header>
-  <img src="https://i.imgur.com/d2BCvGL.png" alt="Office Beacon Logo">
-  <h1>OBPH Training Portal</h1>
-</header>
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="Search a course by name or keyword..." />
+    <button onclick="searchCourses()">Search</button>
+  </div>
 
-<div class="search-container">
-  <input type="text" id="searchBox" placeholder="Search for a course... (e.g. COI)">
-  <button onclick="searchCourses()">🔍 Search</button>
-</div>
+  <div id="courses">Loading courses...</div>
 
-<div id="coursesContainer" class="courses"></div>
-<p id="errorMsg" class="error"></p>
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbxxxxxxx/exec"; // ← your Apps Script URL here
+    let allCourses = [];
 
-<script>
-  const SHEET_ID = "YOUR_SHEET_ID_HERE"; // <-- put your Google Sheet ID here
-  const SHEET_NAME = "Courses";
-  const API_URL = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_NAME}`;
+    fetch(API_URL)
+      .then((res) => res.json())
+      .then((data) => {
+        allCourses = data;
+        displayCourses(allCourses);
+      })
+      .catch((err) => {
+        console.error(err);
+        document.getElementById("courses").innerHTML =
+          "⚠️ Unable to load courses. Please check your API link or sharing settings.";
+      });
 
-  async function fetchCourses() {
-    try {
-      const res = await fetch(API_URL);
-      const data = await res.json();
-      window.allCourses = data;
-      displayCourses(data);
-    } catch (e) {
-      document.getElementById("errorMsg").textContent =
-        "⚠️ Unable to load courses. Please check your sheet link or sharing settings.";
+    function displayCourses(courses) {
+      const container = document.getElementById("courses");
+      container.innerHTML = "";
+      if (courses.length === 0) {
+        container.innerHTML = "<p>No courses found.</p>";
+        return;
+      }
+      courses.forEach((course) => {
+        const card = document.createElement("div");
+        card.className = "course-card";
+        card.innerHTML = `
+          <img src="${course.Image || 'https://i.imgur.com/ZpKZ9QF.png'}" alt="${course.Name}">
+          <h3>${course.Name}</h3>
+          <p>${course.Description}</p>
+          <a href="${course['Course Link']}" target="_blank">View Course</a>
+        `;
+        container.appendChild(card);
+      });
     }
-  }
 
-  function displayCourses(courses) {
-    const container = document.getElementById("coursesContainer");
-    container.innerHTML = "";
-    if (courses.length === 0) {
-      container.innerHTML = "<p>No courses found.</p>";
-      return;
+    function searchCourses() {
+      const keyword = document.getElementById("searchInput").value.toLowerCase();
+      const filtered = allCourses.filter(
+        (c) =>
+          c.Name.toLowerCase().includes(keyword) ||
+          c.Description.toLowerCase().includes(keyword)
+      );
+      displayCourses(filtered);
     }
 
-    courses.forEach(c => {
-      const card = document.createElement("div");
-      card.className = "course-card";
-      card.innerHTML = `
-        <img src="${c.Image || 'https://via.placeholder.com/300x150?text=No+Image'}" alt="Course Image">
-        <h3>${c.Name}</h3>
-        <p>${c.Description}</p>
-        <a href="${c['Course Link']}" target="_blank">Open Course</a>
-      `;
-      container.appendChild(card);
-    });
-  }
-
-  function searchCourses() {
-    const term = document.getElementById("searchBox").value.toLowerCase();
-    const filtered = window.allCourses.filter(
-      c =>
-        c.Name.toLowerCase().includes(term) ||
-        c.Description.toLowerCase().includes(term)
-    );
-    displayCourses(filtered);
-  }
-
-  document.getElementById("searchBox").addEventListener("keyup", searchCourses);
-
-  fetchCourses();
-</script>
-
+    document
+      .getElementById("searchInput")
+      .addEventListener("input", searchCourses);
+  </script>
 </body>
 </html>
