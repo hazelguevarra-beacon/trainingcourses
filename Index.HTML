@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HG Training Portal - Courses</title>
+<style>
+  body {
+    font-family: "Segoe UI", sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #0D1E3B, #FDBE34);
+    color: #fff;
+    min-height: 100vh;
+  }
+  header {
+    display: flex;
+    align-items: center;
+    padding: 15px 30px;
+    background-color: rgba(13, 30, 59, 0.9);
+  }
+  header img {
+    height: 50px;
+    margin-right: 15px;
+  }
+  h1 {
+    font-size: 24px;
+    color: #fff;
+  }
+  .search-container {
+    text-align: center;
+    margin: 40px auto;
+  }
+  input[type="text"] {
+    padding: 12px;
+    width: 300px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    color: #333;
+  }
+  button {
+    background-color: #B6A0D6;
+    border: none;
+    color: #0D1E3B;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 8px;
+    margin-left: 8px;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #FDBE34;
+    color: #fff;
+  }
+  #courses {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .course-card {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    transition: transform 0.2s;
+  }
+  .course-card:hover {
+    transform: translateY(-5px);
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+  .course-card img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  .course-card h3 {
+    color: #FDBE34;
+  }
+  .course-card p {
+    color: #E0E0E0;
+  }
+  .course-card a {
+    text-decoration: none;
+    color: #B6A0D6;
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+  <header>
+    <img src="https://i.imgur.com/glh41tx.png" alt="HG Logo" />
+    <h1>HG Training Portal</h1>
+  </header>
+
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="Search a course by name or keyword..." />
+    <button onclick="searchCourses()">Search</button>
+  </div>
+
+  <div id="courses">Loading courses...</div>
+
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbxrbETJXYmVN-pLOjGqECfjJWNIpUOOc-Y0KYvftgI-lffJpvx035B7NRR0XDy5Xdk3ZQ/exec"; // ← your Apps Script URL here
+    let allCourses = [];
+
+    fetch(API_URL)
+      .then((res) => res.json())
+      .then((data) => {
+        allCourses = data;
+        displayCourses(allCourses);
+      })
+      .catch((err) => {
+        console.error(err);
+        document.getElementById("courses").innerHTML =
+          "⚠️ Unable to load courses. Please check your API link or sharing settings.";
+      });
+
+    function displayCourses(courses) {
+      const container = document.getElementById("courses");
+      container.innerHTML = "";
+      if (courses.length === 0) {
+        container.innerHTML = "<p>No courses found.</p>";
+        return;
+      }
+      courses.forEach((course) => {
+        const card = document.createElement("div");
+        card.className = "course-card";
+        card.innerHTML = `
+          <img src="${course.Image || 'https://i.imgur.com/glh41tx.png'}" alt="${course.Name}">
+          <h3>${course.Name}</h3>
+          <p>${course.Description}</p>
+          <a href="${course['Course Link']}" target="_blank">View Course</a>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function searchCourses() {
+      const keyword = document.getElementById("searchInput").value.toLowerCase();
+      const filtered = allCourses.filter(
+        (c) =>
+          c.Name.toLowerCase().includes(keyword) ||
+          c.Description.toLowerCase().includes(keyword)
+      );
+      displayCourses(filtered);
+    }
+
+    document
+      .getElementById("searchInput")
+      .addEventListener("input", searchCourses);
+  </script>
+</body>
+</html>
